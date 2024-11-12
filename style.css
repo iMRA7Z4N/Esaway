@@ -1,0 +1,120 @@
+/* الأساسيات - تصميم عصري */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(45deg, #ff6b81, #f06595, #5e60e3, #3a86ff);
+    background-size: 400% 400%;
+    animation: gradientAnimation 10s ease infinite;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    margin-top: 30px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.language-selector {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.language-selector label {
+    margin-right: 5px;
+}
+
+.language-selector select {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #3a86ff;
+    color: #fff;
+    font-size: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    outline: none;
+}
+
+textarea {
+    width: calc(100% - 20px);
+    height: 100px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: none;
+    resize: none;
+    font-size: 1rem;
+}
+
+textarea:focus {
+    outline: 2px solid #ff6b81;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.footer-links button {
+    background-color: #f06595;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.footer-links button:hover {
+    background-color: #ff6b81;
+    transform: scale(1.05);
+}
+
+.footer-links .powered-by {
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.footer-links .powered-by a {
+    color: #ff6b81;
+    text-decoration: none;
+}
+
+.footer-links .powered-by a:hover {
+    text-decoration: underline;
+}

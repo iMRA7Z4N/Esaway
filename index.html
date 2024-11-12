@@ -1,0 +1,104 @@
+// script.js
+
+$(document).ready(function() {
+    // تأثير التمرير للروابط داخل الصفحة
+    $('nav ul li a').click(function(event) {
+        event.preventDefault();
+        var target = $(this).attr('href');
+        $('html, body').animate({
+            scrollTop: $(target).offset().top
+        }, 1000);
+    });
+
+    // تأثير عند التمرير على الأزرار
+    $('.cta').hover(function() {
+        $(this).css('background-color', '#ff9933');
+    }, function() {
+        $(this).css('background-color', '#ffcc00');
+    });
+});
+// استرجاع اسم الزائر من localStorage أو إنشاؤه إذا لم يكن موجودًا
+let visitorName = localStorage.getItem("visitorName");
+if (!visitorName) {
+    // إنشاء اسم جديد إذا لم يكن موجودًا فقط
+    visitorName = "زائر " + Math.floor(Math.random() * 100);
+    localStorage.setItem("visitorName", visitorName);
+}
+
+// استرجاع قائمة الزوار من localStorage أو تهيئتها إذا كانت فارغة
+let visitors = JSON.parse(localStorage.getItem("visitors")) || [];
+
+// إضافة الزائر إلى القائمة إذا لم يكن موجودًا بالفعل
+if (!visitors.includes(visitorName)) {
+    visitors.push(visitorName);
+    localStorage.setItem("visitors", JSON.stringify(visitors));
+}
+
+// تحديث عرض الأعضاء المتواجدين
+function updateMembersList() {
+    const membersList = document.getElementById('members-list');
+    membersList.innerHTML = ''; // تنظيف القائمة
+    visitors.forEach(visitor => {
+        const memberItem = document.createElement('div');
+        memberItem.classList.add('member-item');
+        memberItem.textContent = visitor;
+        membersList.appendChild(memberItem);
+    });
+}
+
+// تحديث عدد الزوار الكلي
+function updateVisitorCount() {
+    const visitorCount = document.getElementById('visitor-count');
+    visitorCount.textContent = visitors.length;
+}
+
+// تحديث القائمة عند تحميل الصفحة
+updateMembersList();
+updateVisitorCount();
+
+// إزالة الزائر من القائمة عند مغادرة الصفحة
+window.addEventListener('beforeunload', function() {
+    visitors = visitors.filter(visitor => visitor !== visitorName);
+    localStorage.setItem("visitors", JSON.stringify(visitors));
+    // إزالة اسم الزائر من localStorage إذا لزم الأمر
+    // localStorage.removeItem("visitorName");
+});
+document.getElementById('send-chat').addEventListener('click', function() {
+    const chatInput = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
+
+    // تحقق إذا كانت الرسالة المكتوبة هي "sham"
+    if (chatInput.value.trim().toLowerCase() === "sham") {
+        // مسح جميع الزوار من localStorage وتحديث الواجهة
+        localStorage.removeItem("visitors");
+        visitors = [];
+        updateMembersList();
+        updateVisitorCount();
+
+        // مسح الرسائل في الشات كإشارة على إعادة التعيين
+        chatMessages.innerHTML = '';
+        chatInput.value = ''; // تفريغ الحقل بعد الإرسال
+        alert("تم مسح جميع الزوار!");
+
+        return; // الخروج من الوظيفة لمنع إرسال الرسالة العادية
+    }
+
+    // إضافة رسالة جديدة
+    const newMessage = document.createElement('div'); // استخدام div لاحتواء الرسالة وزر النسخ
+    const messageText = document.createElement('span'); // عنصر منفصل للنص
+    messageText.textContent = visitorName + ": " + chatInput.value;
+
+    const copyBtn = document.createElement('button'); // زر النسخ
+    copyBtn.textContent = "نسخ";
+    copyBtn.classList.add('copy-btn');
+    copyBtn.addEventListener('click', function() {
+        navigator.clipboard.writeText(messageText.textContent); // نسخ النص فقط
+    });
+
+    newMessage.appendChild(messageText);
+    newMessage.appendChild(copyBtn);
+    chatMessages.appendChild(newMessage);
+
+    chatInput.value = ''; // تفريغ الحقل بعد الإرسال
+    chatMessages.scrollTop = chatMessages.scrollHeight; // التمرير لأسفل عند إضافة الرسائل
+});
