@@ -1,104 +1,115 @@
-// script.js
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الاختبارات</title>
+    <!-- رابط استيراد الخط -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <h1 id="exam-title" class="exam-title">نظام الاختبارات</h1>
+        </header>
 
-$(document).ready(function() {
-    // تأثير التمرير للروابط داخل الصفحة
-    $('nav ul li a').click(function(event) {
-        event.preventDefault();
-        var target = $(this).attr('href');
-        $('html, body').animate({
-            scrollTop: $(target).offset().top
-        }, 1000);
-    });
+        <!-- Login Section -->
+        <section id="login-section">
+            <div class="card">
+                <h2>تسجيل الدخول</h2>
+                <input type="text" id="code" class="input-field" placeholder="أدخل كود الدخول" aria-label="أدخل كود الدخول" />
+                <button type="button" id="login-btn" class="primary-btn">دخول</button>
+                <p id="login-message" aria-live="polite"></p>
+            </div>
+        </section>
 
-    // تأثير عند التمرير على الأزرار
-    $('.cta').hover(function() {
-        $(this).css('background-color', '#ff9933');
-    }, function() {
-        $(this).css('background-color', '#ffcc00');
-    });
-});
-// استرجاع اسم الزائر من localStorage أو إنشاؤه إذا لم يكن موجودًا
-let visitorName = localStorage.getItem("visitorName");
-if (!visitorName) {
-    // إنشاء اسم جديد إذا لم يكن موجودًا فقط
-    visitorName = "زائر " + Math.floor(Math.random() * 100);
-    localStorage.setItem("visitorName", visitorName);
-}
+        <!-- Test Section -->
+        <section id="test-section" hidden>
+            <div class="card">
+                <h2>الاختبار</h2>
+                <div id="toolbar">
+                    <button type="button" class="toolbar-btn" onclick="clearAnswer()">حذف الإجابة</button>
+                </div>
+                <div id="timer" role="status">
+                    ⏳ الوقت المتبقي: <span id="time">10:00</span>
+                </div>
+                <div id="progress">
+                    تقدمك: <span id="progress-percentage">0%</span>
+                    <p id="question-count"></p> <!-- لعرض عدد الأسئلة -->
+                </div>
+                <div id="question-container"></div>
+                <div id="navigation">
+                    <button id="prev-btn" class="secondary-btn" type="button" onclick="navigateQuestion(-1)">السابق</button>
+                    <button id="next-btn" class="secondary-btn" type="button" onclick="navigateQuestion(1)">التالي</button>
+                    <button id="submit-btn" class="primary-btn" type="button" onclick="submitTest()">إرسال الاختبار</button>
+                </div>
+<button type="button" class="toolbar-btn" onclick="showAddQuestionForm()">إضافة سؤال جديد</button>
 
-// استرجاع قائمة الزوار من localStorage أو تهيئتها إذا كانت فارغة
-let visitors = JSON.parse(localStorage.getItem("visitors")) || [];
+<!-- نموذج إضافة سؤال جديد -->
+<div id="add-question-form" style="display: none;">
+    <div class="form-header">إضافة سؤال جديد</div>
+    <label for="exam-code">كود الامتحان:</label>
+    <input type="text" id="exam-code" placeholder="أدخل كود الامتحان">
 
-// إضافة الزائر إلى القائمة إذا لم يكن موجودًا بالفعل
-if (!visitors.includes(visitorName)) {
-    visitors.push(visitorName);
-    localStorage.setItem("visitors", JSON.stringify(visitors));
-}
+    <label for="question-text">السؤال:</label>
+    <textarea id="question-text" placeholder="اكتب السؤال هنا"></textarea>
 
-// تحديث عرض الأعضاء المتواجدين
-function updateMembersList() {
-    const membersList = document.getElementById('members-list');
-    membersList.innerHTML = ''; // تنظيف القائمة
-    visitors.forEach(visitor => {
-        const memberItem = document.createElement('div');
-        memberItem.classList.add('member-item');
-        memberItem.textContent = visitor;
-        membersList.appendChild(memberItem);
-    });
-}
+    <label for="options">الخيارات (مفصولة بفاصلة):</label>
+    <input type="text" id="options" placeholder="مثال: خيار1, خيار2, خيار3">
 
-// تحديث عدد الزوار الكلي
-function updateVisitorCount() {
-    const visitorCount = document.getElementById('visitor-count');
-    visitorCount.textContent = visitors.length;
-}
+    <label for="correct-answer">الإجابة الصحيحة:</label>
+    <input type="text" id="correct-answer" placeholder="أدخل الإجابة الصحيحة">
 
-// تحديث القائمة عند تحميل الصفحة
-updateMembersList();
-updateVisitorCount();
+    <button onclick="addQuestion()">إضافة السؤال</button>
+</div>
 
-// إزالة الزائر من القائمة عند مغادرة الصفحة
-window.addEventListener('beforeunload', function() {
-    visitors = visitors.filter(visitor => visitor !== visitorName);
-    localStorage.setItem("visitors", JSON.stringify(visitors));
-    // إزالة اسم الزائر من localStorage إذا لزم الأمر
-    // localStorage.removeItem("visitorName");
-});
-document.getElementById('send-chat').addEventListener('click', function() {
-    const chatInput = document.getElementById('chat-input');
-    const chatMessages = document.getElementById('chat-messages');
+<!-- زر لإظهار نموذج إضافة اختبار جديد -->
+<button type="button" class="toolbar-btn" onclick="showAddExamForm()">إضافة اختبار جديد</button>
 
-    // تحقق إذا كانت الرسالة المكتوبة هي "sham"
-    if (chatInput.value.trim().toLowerCase() === "sham") {
-        // مسح جميع الزوار من localStorage وتحديث الواجهة
-        localStorage.removeItem("visitors");
-        visitors = [];
-        updateMembersList();
-        updateVisitorCount();
+<!-- نموذج إضافة اختبار جديد -->
+<div id="add-exam-form" style="display: none;">
+    <h3>إضافة اختبار جديد</h3>
+    
+    <label for="new-exam-code">كود الاختبار:</label>
+    <input type="text" id="new-exam-code" placeholder="مثال: 67890" /><br />
+    
+    <label for="new-exam-title">عنوان الاختبار:</label>
+    <input type="text" id="new-exam-title" placeholder="مثال: FB-NEW-EXAM" /><br />
+    
+    <label for="new-exam-duration">مدة الاختبار (بالثواني):</label>
+    <input type="number" id="new-exam-duration" placeholder="مثال: 600" /><br />
+    
+    <button type="button" class="primary-btn" onclick="addNewExam()">إضافة</button>
+    <button type="button" class="secondary-btn" onclick="hideAddExamForm()">إلغاء</button>
+</div>
 
-        // مسح الرسائل في الشات كإشارة على إعادة التعيين
-        chatMessages.innerHTML = '';
-        chatInput.value = ''; // تفريغ الحقل بعد الإرسال
-        alert("تم مسح جميع الزوار!");
+                <div id="progress-bar-container">
+                    <div id="progress-bar"></div>
+                    <!-- قائمة جانبية للتنقل بين الأسئلة -->
+                    <div id="sidebar" class="sidebar" hidden>
+                        <ul id="question-list">
+                            <!-- سيتم ملء هذا الجزء ديناميكياً عبر JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        return; // الخروج من الوظيفة لمنع إرسال الرسالة العادية
-    }
+        <!-- Result Section -->
+        <section id="result-section" hidden>
+            <div class="card">
+                <h2>نتائج الاختبار</h2>
+                <p id="result-message"></p>
+                <button type="button" class="primary-btn" onclick="resetApp()">الذهاب للرئيسية</button>
+            </div>
+        </section>
+    </main>
 
-    // إضافة رسالة جديدة
-    const newMessage = document.createElement('div'); // استخدام div لاحتواء الرسالة وزر النسخ
-    const messageText = document.createElement('span'); // عنصر منفصل للنص
-    messageText.textContent = visitorName + ": " + chatInput.value;
+    <script src="script.js"></script>
+</body>
+</html>
 
-    const copyBtn = document.createElement('button'); // زر النسخ
-    copyBtn.textContent = "نسخ";
-    copyBtn.classList.add('copy-btn');
-    copyBtn.addEventListener('click', function() {
-        navigator.clipboard.writeText(messageText.textContent); // نسخ النص فقط
-    });
 
-    newMessage.appendChild(messageText);
-    newMessage.appendChild(copyBtn);
-    chatMessages.appendChild(newMessage);
 
-    chatInput.value = ''; // تفريغ الحقل بعد الإرسال
-    chatMessages.scrollTop = chatMessages.scrollHeight; // التمرير لأسفل عند إضافة الرسائل
-});
+
