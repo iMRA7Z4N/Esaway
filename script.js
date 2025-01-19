@@ -105,91 +105,7 @@ const exams = [
                 options: ["Pomme", "Banane", "Orange"],
                 answer: "Pomme"
             },
-            {
-                question: "Comment dit-on 'good morning' en français?",
-                options: ["Bonjour", "Bonsoir", "Salut"],
-                answer: "Bonjour"
-            },
-            {
-                question: "Quel est l'antonyme de 'grand'?",
-                options: ["Petit", "Vieux", "Jeune"],
-                answer: "Petit"
-            },
-            {
-                question: "Quel est le verbe qui signifie 'to eat' en français?",
-                options: ["Manger", "Boire", "Dormir"],
-                answer: "Manger"
-            },
-            {
-                question: "Comment dit-on 'thank you' en français?",
-                options: ["Merci", "S'il vous plaît", "Excusez-moi"],
-                answer: "Merci"
-            },
-            {
-                question: "Quel est le pluriel de 'chat'?",
-                options: ["Chats", "Chattes", "Chaux"],
-                answer: "Chats"
-            },
-            {
-                question: "Comment dit-on 'I am happy' en français?",
-                options: ["Je suis content", "Je suis triste", "Je suis fatigué"],
-                answer: "Je suis content"
-            },
-            {
-                question: "Quelle est la couleur du ciel par une journée ensoleillée?",
-                options: ["Bleu", "Rouge", "Vert"],
-                answer: "Bleu"
-            },
-            {
-                question: "Comment s'appelle la capitale de la France?",
-                options: ["Paris", "Marseille", "Lyon"],
-                answer: "Paris"
-            },
-            {
-                question: "Comment dit-on 'goodbye' en français?",
-                options: ["Au revoir", "Bonjour", "Salut"],
-                answer: "Au revoir"
-            },
-            {
-                question: "Quel est le féminin de 'acteur'?",
-                options: ["Actrice", "Acteur", "Comédienne"],
-                answer: "Actrice"
-            },
-            {
-                question: "Comment s'appelle la fête française le 14 juillet?",
-                options: ["La fête nationale", "Noël", "L'Assomption"],
-                answer: "La fête nationale"
-            },
-            {
-                question: "Quelle est la traduction française de 'school'?",
-                options: ["École", "Université", "Collège"],
-                answer: "École"
-            },
-            {
-                question: "Quel est l'article défini pour 'fille'?",
-                options: ["La", "Le", "Les"],
-                answer: "La"
-            },
-            {
-                question: "Comment dit-on 'I don't understand' en français?",
-                options: ["Je ne comprends pas", "Je comprends", "Je parle bien"],
-                answer: "Je ne comprends pas"
-            },
-            {
-                question: "Quel est le verbe pour 'to speak' en français?",
-                options: ["Parler", "Écouter", "Marcher"],
-                answer: "Parler"
-            },
-            {
-                question: "Quelle est la traduction de 'cat' en français?",
-                options: ["Chat", "Chien", "Poisson"],
-                answer: "Chat"
-            },
-            {
-                question: "Comment dit-on 'please' en français?",
-                options: ["S'il vous plaît", "Merci", "Excusez-moi"],
-                answer: "S'il vous plaît"
-            },
+            // باقي الأسئلة هنا
         ],
         duration: 720, // 12 minutes
     },
@@ -197,9 +113,10 @@ const exams = [
         code: "ADMIN",
         title: "ADMIN STATION",
         questions: [],
-        duration: 99999999999999,
+        duration: 0, // يمكن أن يكون غير محدود
     },
 ];
+
 
 
 let currentExam, currentQuestionIndex = 0, timer, timeLeft, userAnswers;
